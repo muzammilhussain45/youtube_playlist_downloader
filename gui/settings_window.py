@@ -11,7 +11,8 @@ class SettingsWindow(ctk.CTkToplevel):
     def __init__(
         self,
         parent,
-        settings
+        settings,
+        on_save=None
     ):
 
         super().__init__(
@@ -20,6 +21,7 @@ class SettingsWindow(ctk.CTkToplevel):
 
 
         self.settings = settings
+        self.on_save = on_save
 
 
         self.title(
@@ -323,6 +325,11 @@ class SettingsWindow(ctk.CTkToplevel):
 
 
         self.settings.save_settings()
+
+
+        if self.on_save:
+
+            self.on_save()
 
 
         self.destroy()

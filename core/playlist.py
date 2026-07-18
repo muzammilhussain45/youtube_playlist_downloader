@@ -17,6 +17,9 @@ class VideoInfo:
     title: str
     url: str
     duration: int | None
+    thumbnail: str | None = None
+    selected: bool = True
+    downloaded: bool = False
 
 
 
@@ -53,7 +56,9 @@ class PlaylistAnalyzer:
         playlist_url: str
     ) -> PlaylistInfo:
         """
-        Analyze playlist and remove already downloaded videos.
+        Analyze playlist. Already-downloaded videos are still shown
+        (marked as downloaded and auto-deselected) so the user can
+        re-download them if the files were deleted.
         """
 
 
@@ -110,12 +115,17 @@ class PlaylistAnalyzer:
             )
 
 
-            if self.database.video_exists(video_id):
+            thumbnail = item.get(
+                "thumbnail"
+            ) or (
+                f"https://i.ytimg.com/vi/{video_id}/mqdefault.jpg"
+            )
 
+
+            already = self.database.video_exists(video_id)
+
+            if already:
                 downloaded_count += 1
-
-                continue
-
 
 
             videos.append(
@@ -123,7 +133,13 @@ class PlaylistAnalyzer:
                     video_id=video_id,
                     title=title,
                     url=video_url,
-                    duration=duration
+                    duration=duration,
+                    thumbnail=thumbnail,
+                    # Already-downloaded videos are shown but
+                    # deselected so they aren't re-downloaded
+                    # unless the user explicitly selects them.
+                    selected=not already,
+                    downloaded=already
                 )
             )
 

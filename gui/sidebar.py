@@ -45,18 +45,13 @@ class Sidebar(ctk.CTkFrame):
         buttons = [
 
             (
-                "Analyze",
+                "Analyze / Downloader",
                 callbacks["analyze"]
             ),
 
             (
                 "History",
                 callbacks["history"]
-            ),
-
-            (
-                "Settings",
-                callbacks["settings"]
             )
 
         ]

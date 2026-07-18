@@ -34,6 +34,9 @@ class VideoDownloader:
         self.cancel_event = threading.Event()
 
 
+        self.skip_event = threading.Event()
+
+
         self.status = "IDLE"
 
 
@@ -73,6 +76,16 @@ class VideoDownloader:
         self.cancel_event.set()
 
 
+    def skip(self):
+        """
+        Skip the current download and move to the next video.
+        """
+
+        self.status = "SKIPPED"
+
+        self.skip_event.set()
+
+
 
 
     def download(
@@ -93,7 +106,14 @@ class VideoDownloader:
         self.status = "DOWNLOADING"
 
 
-        self.cancel_event.clear()
+        # Reset skip flag for this individual video so a skip requested
+        # for a previous video does not carry over.
+        self.skip_event.clear()
+
+
+        # NOTE: cancel_event is intentionally NOT cleared here so that a
+        # cancel requested by the user persists across the whole queue.
+        # It is cleared in start_download() before a new run begins.
 
 
 
@@ -158,6 +178,16 @@ class VideoDownloader:
 
                 raise Exception(
                     "Download cancelled"
+                )
+
+
+
+            # Skip support
+
+            if self.skip_event.is_set():
+
+                raise Exception(
+                    "Download skipped"
                 )
 
 
