@@ -1,0 +1,26 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+database/history.db
+database/*.db
+
+downloads/
+downloads/*
+
+logs/
+logs/*
+
+dist/
+build/
+YouTube Playlist Downloader.spec
+
+test_*.py
+
+settings.json
+
+.idea/
+.vscode/
