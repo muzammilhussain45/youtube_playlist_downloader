@@ -773,6 +773,11 @@ class MainWindow(ctk.CTk):
             self.after(0, lambda: self.current_progress.set(0))
             self.after(0, lambda: self.current_percent_label.configure(
                 text="0%"))
+            # Re-enable the skip button for each new video so a skip
+            # requested (and consumed) for a previous video does not
+            # leave the button permanently disabled.
+            self.after(0, lambda: self.current_skip_button.configure(
+                state="normal"))
 
             success = self.downloader.download(
                 video,
